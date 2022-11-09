@@ -4,16 +4,23 @@
   "description": "Проект Mesto фронтенд + бэкенд",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shuraaas/express-mesto-gha.git"
   },
-  "author": "Alexandr Perunov",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/shuraaas/express-mesto-gha/issues"
   },
-  "homepage": "https://github.com/shuraaas/express-mesto-gha/index.html"
+  "homepage": "https://github.com/shuraaas/express-mesto-gha/index.html",
+  "devDependencies": {
+    "eslint": "^8.27.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  }
 }
