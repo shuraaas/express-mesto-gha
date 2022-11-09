@@ -1,0 +1,19 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "Проект Mesto фронтенд + бэкенд",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shuraaas/express-mesto-gha.git"
+  },
+  "author": "Alexandr Perunov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shuraaas/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/shuraaas/express-mesto-gha/index.html"
+}
