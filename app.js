@@ -1,18 +1,29 @@
-const express = require('express');
-const mongoose = require('mongoose');
-// import { Express } from 'express';
-// Слушаем 3000 порт
-const { PORT = 3000 } = process.env;
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 
+// роуты
+import { router as userRouter } from './routes/users.js ';
+import { router as cardRouter } from './routes/users.js ';
+
+const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false
+app.use(bodyParser.json());
+
+mongoose.connect('mongodb://localhost:27017/mestodb');
+
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: '636f8cf0a3a2b40012c3720a'
+  };
+
+  next();
 });
 
 app.listen(PORT, () => {
-    // Если всё работает, консоль покажет, какой порт приложение слушает
-    console.log(`App listening on port ${PORT}`)
+    console.log(`App listening on port ${PORT}`);
 })
