@@ -8,5 +8,5 @@ import {
 export const router = Router();
 
 router.get('/', getUsers);
-router.get('/', getUserById);
+router.get('/:userId', getUserById);
 router.post('/', createUser);

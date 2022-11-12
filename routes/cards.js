@@ -9,4 +9,4 @@ export const router = Router();
 
 router.get('/', getCards);
 router.post('/', createCadrd);
-router.delete('/', deleteCard);
+router.delete('/:cardId', deleteCard);

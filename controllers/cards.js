@@ -1,7 +1,3 @@
-// module.exports.createCard = (req, res) => {
-//   console.log(req.user._id); // _id станет доступен
-// }
-
 import { constants } from 'http2';
 import { Card } from '../models/card.js';
 
@@ -36,7 +32,9 @@ export const getCards = (req, res) => {
 };
 
 export const createCadrd = (req, res) => {
-  Card.create(req.body)
+  const { name, link } = req.body;
+
+  Card.create({ name, link, owner: req.user._id })
     .then((cards) => {
       res.send(cards);
     })
@@ -50,5 +48,15 @@ export const createCadrd = (req, res) => {
 };
 
 export const deleteCard = (req, res) => {
-
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => {
+      res.send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidatorError') {
+        responseBadRequestError(res, err.message);
+      } else {
+        responseServerError(res, err.message);
+      }
+    });
 };

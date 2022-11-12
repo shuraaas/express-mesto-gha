@@ -32,27 +32,22 @@ export const getUsers = (req, res) => {
 };
 
 export const getUserById = (req, res) => {
+  // res.send(req.user._id)
 
-  res.send(req.params)
-
-  // User.findById(req.params.id)(req.body)
-  //   .then((user) => {
-  //     res.send(user);
-  //   })
-  //   .catch((err) => {
-  //     if (err.name === 'ValidatorError') {
-  //       responseBadRequestError(res, err.message);
-  //     } else {
-  //       responseServerError(res, err.message);
-  //     }
-  //   });
+  User.findById(req.user._id)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidatorError') {
+        responseBadRequestError(res, err.message);
+      } else {
+        responseServerError(res, err.message);
+      }
+    });
 };
 
 export const createUser = (req, res) => {
-  // const { name, about, avatar } = req.body;
-
-  // res.send(req.body.name)
-
   User.create(req.body)
     .then((user) => {
       res.send(user);
