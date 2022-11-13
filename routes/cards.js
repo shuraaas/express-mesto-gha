@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
   getCards,
   createCadrd,
-  deleteCard
+  deleteCard,
 } from '../controllers/cards.js';
 
 export const router = Router();

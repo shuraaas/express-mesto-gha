@@ -35,12 +35,12 @@ Cache-Control: no-cache
 Content-Type: application/json
 
 {
-  "name": "себек3",
+  "name": "себек2",
   "link": "https://sobakovod.club/uploads/posts/2021-12/thumbs/1639670110_37-sobakovod-club-p-sobaki-sobachku-malenkuyu-na-telefon-37.jpg"
 }
 
 ### Удалить карточку
-DELETE http://localhost:3000/cards/636fdda5120f6313ebc0ed74
+DELETE http://localhost:3000/cards/6370d1bc249a47c854849b1d
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
