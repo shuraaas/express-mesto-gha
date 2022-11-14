@@ -13,6 +13,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
+  // ! Хардкод для тестов
   req.user = {
     _id: '636fa80e7081e161d24a6a4c',
   };
@@ -23,4 +24,6 @@ app.use((req, res, next) => {
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server run on http://localhost:${PORT}/`);
+});

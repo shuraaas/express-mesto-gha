@@ -1,0 +1,34 @@
+### ! Показать все карточки
+GET http://localhost:3000/cards
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+### ! Создать карточку
+POST http://localhost:3000/cards
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "name": "Название карточки",
+  "link": "http://link.com",
+}
+
+### ! Удалить карточку
+DELETE http://localhost:3000/cards/1
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+### ! Поставить лайк карточке
+PUT http://localhost:3000/cards/636fdd59120f6313ebc0ed72/likes
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+### ! Удалить лайк с карточки
+DELETE http://localhost:3000/cards/636fdd59120f6313ebc0ed72/likes
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
