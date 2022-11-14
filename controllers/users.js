@@ -12,6 +12,7 @@ import { User } from '../models/user.js';
 
 // 500 — Ошибка по умолчанию.
 
+// обработка ошибок
 const responseBadRequestError = (res, message) => {
   res
     .status(constants.HTTP_STATUS_BAD_REQUEST)
@@ -28,6 +29,7 @@ const responseServerError = (res, message) => {
     });
 };
 
+// получить всех пользователей
 export const getUsers = (req, res) => {
 
   res.send(constants)
@@ -45,6 +47,7 @@ export const getUsers = (req, res) => {
   //   });
 };
 
+// получить пользователя по ID
 export const getUserById = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
@@ -59,6 +62,7 @@ export const getUserById = (req, res) => {
     });
 };
 
+// создать пользователя
 export const createUser = (req, res) => {
   User.create(req.body)
     .then((user) => {
@@ -73,6 +77,7 @@ export const createUser = (req, res) => {
     });
 };
 
+// обновить профиль
 export const updateUserProfile = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
@@ -97,6 +102,7 @@ export const updateUserProfile = (req, res) => {
 };
 
 // TODO: проверить как работает
+// обновить аватар
 export const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
