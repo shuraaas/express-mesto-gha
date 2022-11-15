@@ -1,4 +1,10 @@
-GET http://localhost:3000/users/61eade4c6d5acf558c42d9b8
+PATCH http://localhost:3000/users/me
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
+Authorization: 636fa80e7081e161d24a6a4c
+
+{
+  "name": "Тестовый пользователь",
+  "about": "Инфо о себе"
+}

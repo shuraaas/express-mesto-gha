@@ -62,9 +62,11 @@ export const createUser = (req, res) => {
 };
 
 export const updateUserProfile = (req, res) => {
+  const { name, about } = req.body;
+
   User.findByIdAndUpdate(
     req.user._id,
-    { name: 'Тестовый пользователь' },
+    { name, about },
     {
       new: true,
       runValidators: true,
