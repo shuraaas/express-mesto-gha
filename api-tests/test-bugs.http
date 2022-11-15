@@ -1,0 +1,22 @@
+GET http://localhost:3000/users/637383fe764a6e7badb8dd90b
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+###
+POST http://localhost:3000/users
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "name": "test",
+  "about": "about",
+  "avatar": "https://ya.ru/av.bmp"
+}
+
+###
+GET http://localhost:3000/users/text
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json

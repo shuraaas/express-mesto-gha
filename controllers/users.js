@@ -30,7 +30,7 @@ export const getUsers = (req, res) => {
 };
 
 export const getUserById = (req, res) => {
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .then((user) => {
       res.send(user);
     })
