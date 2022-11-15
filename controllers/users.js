@@ -65,7 +65,8 @@ export const updateUserProfile = (req, res) => {
       new: true,
       runValidators: true,
       upsert: true,
-    })
+    },
+  )
     .then((user) => {
       res.send(user);
     })
@@ -88,7 +89,8 @@ export const updateUserAvatar = (req, res) => {
       new: true,
       runValidators: true,
       upsert: true,
-    })
+    },
+  )
     .then((user) => {
       res.send(user);
     })
