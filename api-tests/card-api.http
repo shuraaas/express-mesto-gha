@@ -11,12 +11,13 @@ Cache-Control: no-cache
 Content-Type: application/json
 
 {
-  "name": "Название карточки",
-  "link": "http://link.com",
+  "name": "name",
+  "link": "link"
 }
 
+
 ### ! Удалить карточку
-DELETE http://localhost:3000/cards/1
+DELETE http://localhost:3000/cards/63724a77157fb1717174b02e
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json

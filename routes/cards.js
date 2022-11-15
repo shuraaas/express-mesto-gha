@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
   getCards,
-  createCadrd,
+  createCard,
   deleteCard,
   putCardLike,
   deleteCardLike,
@@ -10,7 +10,7 @@ import {
 export const router = Router();
 
 router.get('/', getCards);
-router.post('/', createCadrd);
+router.post('/', createCard);
 router.delete('/:cardId', deleteCard);
 router.put('/:cardId/likes', putCardLike);
 router.delete('/:cardId/likes', deleteCardLike);

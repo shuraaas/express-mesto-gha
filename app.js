@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-
 // роуты
 import { router as userRouter } from './routes/users.js';
 import { router as cardRouter } from './routes/cards.js';

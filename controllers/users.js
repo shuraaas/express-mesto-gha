@@ -1,53 +1,34 @@
 import { constants } from 'http2';
 import { User } from '../models/user.js';
 
-// TODO: Нужно сделать обработку ошибок по заданию
-// для пользователя может быть:
-// 400 — Переданы некорректные данные при создании пользователя.
-// 400 — Переданы некорректные данные при обновлении профиля.
-// 400 — Переданы некорректные данные при обновлении аватара.
+const responseBadRequestError = (res, message) => res
+  .status(constants.HTTP_STATUS_BAD_REQUEST)
+  .send({
+    message: `Переданы некорректные данные пользователя. ${message}`,
+  });
 
-// 404 — Пользователь по указанному _id не найден.
-// 404 — Пользователь с указанным _id не найден.
+const responseServerError = (res, message) => res
+  .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
+  .send({
+    message: `На сервере произошла ошибка. ${message}`,
+  });
 
-// 500 — Ошибка по умолчанию.
+const responseNotFoundError = (res, message) => res
+  .status(constants.HTTP_STATUS_NOT_FOUND)
+  .send({
+    message: `Пользователь с указанным _id не найден. ${message}`,
+  });
 
-// обработка ошибок
-const responseBadRequestError = (res, message) => {
-  res
-    .status(constants.HTTP_STATUS_BAD_REQUEST)
-    .send({
-      message: `Некорректные данные пользователя. ${message}`,
-    });
-};
-
-const responseServerError = (res, message) => {
-  res
-    .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
-    .send({
-      message: `На сервере произошла ошибка. ${message}`,
-    });
-};
-
-// получить всех пользователей
 export const getUsers = (req, res) => {
-
-  res.send(constants)
-
-  // User.find({})
-  //   .then((users) => {
-  //     res.send(users);
-  //   })
-  //   .catch((err) => {
-  //     if (err.name === 'CastError') {
-  //       responseBadRequestError(res, err.message);
-  //     } else {
-  //       responseServerError(res, err.message);
-  //     }
-  //   });
+  User.find({})
+    .then((users) => {
+      res.send(users);
+    })
+    .catch((err) => {
+      responseServerError(res, err.message);
+    });
 };
 
-// получить пользователя по ID
 export const getUserById = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
@@ -55,14 +36,13 @@ export const getUserById = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        responseBadRequestError(res, err.message);
+        responseNotFoundError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
     });
 };
 
-// создать пользователя
 export const createUser = (req, res) => {
   User.create(req.body)
     .then((user) => {
@@ -77,13 +57,10 @@ export const createUser = (req, res) => {
     });
 };
 
-// обновить профиль
 export const updateUserProfile = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
-    {
-      name: 'Виктор Гусев',
-    },
+    { name: 'Тестовый пользователь' },
     {
       new: true,
       runValidators: true,
@@ -93,22 +70,20 @@ export const updateUserProfile = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidatorError') {
+      if (err.name === 'ValidationError') {
         responseBadRequestError(res, err.message);
+      } else if (err.name === 'CastError') {
+        responseNotFoundError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
     });
 };
 
-// TODO: проверить как работает
-// обновить аватар
 export const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
-    {
-      avatar: 'https://sobakovod.club',
-    },
+    { avatar: 'https://sobakovod.club' },
     {
       new: true,
       runValidators: true,
@@ -118,8 +93,10 @@ export const updateUserAvatar = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidatorError') {
+      if (err.name === 'ValidationError') {
         responseBadRequestError(res, err.message);
+      } else if (err.name === 'CastError') {
+        responseNotFoundError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }

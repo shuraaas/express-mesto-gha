@@ -1,33 +1,23 @@
 import { constants } from 'http2';
 import { Card } from '../models/card.js';
 
-// TODO: Нужно сделать обработку ошибок по заданию
-// для карточек может быть:
-// 400 — Переданы некорректные данные при создании карточки.
-// 400 — Переданы некорректные данные для постановки/снятии лайка.
+const responseBadRequestError = (res, message) => res
+  .status(constants.HTTP_STATUS_BAD_REQUEST)
+  .send({
+    message: `Переданы некорректные данные карточки. ${message}`,
+  });
 
-// 404 — Карточка с указанным _id не найдена.
-// 404 — Передан несуществующий _id карточки.
+const responseServerError = (res, message) => res
+  .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
+  .send({
+    message: `На сервере произошла ошибка. ${message}`,
+  });
 
-// 500 — Ошибка по умолчанию.
-
-const responseBadRequestError = (res, message) => {
-  res
-    .status(constants.HTTP_STATUS_BAD_REQUEST)
-    .send({
-      // TODO: тут надо пометять текст
-      message: `Некорректные данные пользователя. ${message}`,
-    });
-};
-
-const responseServerError = (res, message) => {
-  res
-    .status(constants.HTTP_STATUS_BAD_REQUEST)
-    .send({
-      // TODO: тут надо пометять текст
-      message: `На сервере произошла ошибка. ${message}`,
-    });
-};
+const responseNotFoundError = (res, message) => res
+  .status(constants.HTTP_STATUS_NOT_FOUND)
+  .send({
+    message: `Карточка с указанным _id не найдена. ${message}`,
+  });
 
 export const getCards = (req, res) => {
   Card.find({})
@@ -35,15 +25,11 @@ export const getCards = (req, res) => {
       res.send(cards);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        responseBadRequestError(res, err.message);
-      } else {
-        responseServerError(res, err.message);
-      }
+      responseServerError(res, err.message);
     });
 };
 
-export const createCadrd = (req, res) => {
+export const createCard = (req, res) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
@@ -51,7 +37,7 @@ export const createCadrd = (req, res) => {
       res.send(cards);
     })
     .catch((err) => {
-      if (err.name === 'ValidatorError') {
+      if (err.name === 'ValidationError') {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res, err.message);
@@ -65,8 +51,8 @@ export const deleteCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidatorError') {
-        responseBadRequestError(res, err.message);
+      if (err.name === 'CastError') {
+        responseNotFoundError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
@@ -83,8 +69,10 @@ export const putCardLike = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidatorError') {
+      if (err.name === 'ValidationError') {
         responseBadRequestError(res, err.message);
+      } else if (err.name === 'CastError') {
+        responseNotFoundError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
@@ -101,8 +89,10 @@ export const deleteCardLike = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidatorError') {
+      if (err.name === 'ValidationError') {
         responseBadRequestError(res, err.message);
+      } else if (err.name === 'CastError') {
+        responseNotFoundError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
