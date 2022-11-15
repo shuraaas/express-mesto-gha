@@ -32,7 +32,11 @@ export const getUsers = (req, res) => {
 export const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
-      res.send(user);
+      if (!user) {
+        responseNotFoundError(res, 404);
+      } else {
+        res.send(user);
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
