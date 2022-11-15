@@ -17,8 +17,9 @@ app.use((req, res, next) => {
   };
 
   // псевдоавторизация
-  if (req.headers['Authorization'] || req.headers['authorization']) {
-    req.user._id = req.headers['Authorization'] || req.headers['authorization'];
+  // if (req.headers['Authorization'] || req.headers['authorization']) {
+  if (req.headers.authorization) {
+    req.user._id = req.headers.authorization;
   }
 
   next();

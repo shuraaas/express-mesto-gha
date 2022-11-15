@@ -1,7 +1,8 @@
-GET http://localhost:3000/users/637383fe764a6e7badb8dd90b
+GET http://localhost:3000/users
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
+Authorization: 12qweqweqw
 
 ###
 POST http://localhost:3000/users

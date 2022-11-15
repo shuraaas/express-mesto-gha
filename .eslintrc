@@ -9,7 +9,6 @@
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
     "eol-last": ["error", "never"],
     "import/extensions": "off",
-    "import/prefer-default-export": "off",
-    "sub": "true"
+    "import/prefer-default-export": "off"
   }
 }
