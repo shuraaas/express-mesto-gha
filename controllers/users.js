@@ -36,7 +36,7 @@ export const getUserById = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        responseNotFoundError(res, err.message);
+        responseBadRequestError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
