@@ -1,10 +1,4 @@
-PATCH http://localhost:3000/users/me
+PATCH http://localhost:3000/404 
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
-Authorization: 636fa80e7081e161d24a6a4c
-
-{
-  "name": "Тестовый пользователь",
-  "about": "Инфо о себе"
-}

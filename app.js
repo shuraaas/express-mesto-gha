@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import { constants } from 'http2';
 import { router as userRouter } from './routes/users.js';
 import { router as cardRouter } from './routes/cards.js';
 
@@ -27,6 +28,9 @@ app.use((req, res, next) => {
 
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
+app.use('*', (req, res) => res
+  .status(constants.HTTP_STATUS_NOT_FOUND)
+  .send({ message: 'Запрашиваемая страница не найдена.' }));
 
 app.listen(PORT, () => {
   console.log(`Server run on http://localhost:${PORT}/`);

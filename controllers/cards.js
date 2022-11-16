@@ -48,11 +48,15 @@ export const createCard = (req, res) => {
 export const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      res.send(card);
+      if (!card) {
+        responseNotFoundError(res, 404);
+      } else {
+        res.send(card);
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        responseNotFoundError(res, err.message);
+        responseBadRequestError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
@@ -66,7 +70,11 @@ export const putCardLike = (req, res) => {
     { new: true },
   )
     .then((card) => {
-      res.send(card);
+      if (!card) {
+        responseNotFoundError(res, 404);
+      } else {
+        res.send(card);
+      }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -86,12 +94,16 @@ export const deleteCardLike = (req, res) => {
     { new: true },
   )
     .then((card) => {
-      res.send(card);
+      if (!card) {
+        responseNotFoundError(res, 404);
+      } else {
+        res.send(card);
+      }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         responseBadRequestError(res, err.message);
-      } else if (err.name === 'CastError') {
+      } else if (err.name === 'ValidationError') {
         responseNotFoundError(res, err.message);
       } else {
         responseServerError(res, err.message);
