@@ -1,4 +1,4 @@
-PUT http://localhost:3000/cards/text/likes  
+GET http://localhost:3000/users
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
