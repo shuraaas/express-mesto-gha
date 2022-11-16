@@ -7,10 +7,10 @@ const responseBadRequestError = (res, message) => res
     message: `Переданы некорректные данные пользователя. ${message}`,
   });
 
-const responseServerError = (res, message) => res
+const responseServerError = (res) => res
   .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
   .send({
-    message: `На сервере произошла ошибка. ${message}`,
+    message: 'На сервере произошла ошибка.',
   });
 
 const responseNotFoundError = (res, message) => res
@@ -25,7 +25,8 @@ const getUsers = (req, res) => {
       res.send(users);
     })
     .catch((err) => {
-      responseServerError(res, err.message);
+      responseServerError(res);
+      console.log(`На сервере произошла ошибка. ${err.message}`);
     });
 };
 
@@ -42,7 +43,8 @@ const getUserById = (req, res) => {
       if (err.name === 'CastError') {
         responseBadRequestError(res, err.message);
       } else {
-        responseServerError(res, err.message);
+        responseServerError(res);
+        console.log(`На сервере произошла ошибка. ${err.message}`);
       }
     });
 };
@@ -56,7 +58,8 @@ const createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         responseBadRequestError(res, err.message);
       } else {
-        responseServerError(res, err.message);
+        responseServerError(res);
+        console.log(`На сервере произошла ошибка. ${err.message}`);
       }
     });
 };
@@ -82,7 +85,8 @@ const updateUserProfile = (req, res) => {
       } else if (err.name === 'CastError') {
         responseNotFoundError(res, err.message);
       } else {
-        responseServerError(res, err.message);
+        responseServerError(res);
+        console.log(`На сервере произошла ошибка. ${err.message}`);
       }
     });
 };
@@ -108,7 +112,8 @@ const updateUserAvatar = (req, res) => {
       } else if (err.name === 'CastError') {
         responseNotFoundError(res, err.message);
       } else {
-        responseServerError(res, err.message);
+        responseServerError(res);
+        console.log(`На сервере произошла ошибка. ${err.message}`);
       }
     });
 };
