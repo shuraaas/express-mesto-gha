@@ -1,4 +1,8 @@
-GET http://localhost:3000/users
+PATCH http://localhost:3000/users/me/avatar
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
+
+{
+  "avatar": "avatar"
+}

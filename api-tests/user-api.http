@@ -29,7 +29,7 @@ Cache-Control: no-cache
 Content-Type: application/json
 
 {
-  "name": "Тестовый пользователь"
+  "name": "Тестовый пользователь2"
 }
 
 ### ! Обновление аватарки пользователя

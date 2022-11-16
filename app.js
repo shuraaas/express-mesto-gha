@@ -31,5 +31,5 @@ app.use('*', (req, res) => res
   .send({ message: 'Запрашиваемая страница не найдена.' }));
 
 app.listen(PORT, () => {
-  console.log(`Server start on http://localhost:${PORT}/`);
+  console.log(`Server run on http://localhost:${PORT}/`);
 });
