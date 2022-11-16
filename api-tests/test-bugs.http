@@ -1,4 +1,8 @@
-PATCH http://localhost:3000/404 
+PATCH http://localhost:3000/users/me/avatar
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
+
+{
+  "avatar": "https://ya.ru/av2.bmp"
+}

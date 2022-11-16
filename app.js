@@ -17,8 +17,6 @@ app.use((req, res, next) => {
     _id: '636fa80e7081e161d24a6a4c',
   };
 
-  // псевдоавторизация
-  // if (req.headers['Authorization'] || req.headers['authorization']) {
   if (req.headers.authorization) {
     req.user._id = req.headers.authorization;
   }
