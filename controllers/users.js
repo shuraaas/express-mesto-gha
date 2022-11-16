@@ -19,7 +19,7 @@ const responseNotFoundError = (res, message) => res
     message: `Пользователь с указанным _id не найден. ${message}`,
   });
 
-export const getUsers = (req, res) => {
+const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
       res.send(users);
@@ -29,7 +29,7 @@ export const getUsers = (req, res) => {
     });
 };
 
-export const getUserById = (req, res) => {
+const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -47,7 +47,7 @@ export const getUserById = (req, res) => {
     });
 };
 
-export const createUser = (req, res) => {
+const createUser = (req, res) => {
   User.create(req.body)
     .then((user) => {
       res.send(user);
@@ -61,7 +61,7 @@ export const createUser = (req, res) => {
     });
 };
 
-export const updateUserProfile = (req, res) => {
+const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
@@ -87,7 +87,7 @@ export const updateUserProfile = (req, res) => {
     });
 };
 
-export const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
@@ -111,4 +111,12 @@ export const updateUserAvatar = (req, res) => {
         responseServerError(res, err.message);
       }
     });
+};
+
+export {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUserProfile,
+  updateUserAvatar,
 };

@@ -19,7 +19,7 @@ const responseNotFoundError = (res, message) => res
     message: `Карточка с указанным _id не найдена. ${message}`,
   });
 
-export const getCards = (req, res) => {
+const getCards = (req, res) => {
   Card.find({})
     .then((cards) => {
       res.send(cards);
@@ -29,7 +29,7 @@ export const getCards = (req, res) => {
     });
 };
 
-export const createCard = (req, res) => {
+const createCard = (req, res) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
@@ -45,7 +45,7 @@ export const createCard = (req, res) => {
     });
 };
 
-export const deleteCard = (req, res) => {
+const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
@@ -63,7 +63,7 @@ export const deleteCard = (req, res) => {
     });
 };
 
-export const putCardLike = (req, res) => {
+const putCardLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -87,7 +87,7 @@ export const putCardLike = (req, res) => {
     });
 };
 
-export const deleteCardLike = (req, res) => {
+const deleteCardLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -109,4 +109,12 @@ export const deleteCardLike = (req, res) => {
         responseServerError(res, err.message);
       }
     });
+};
+
+export {
+  getCards,
+  createCard,
+  deleteCard,
+  putCardLike,
+  deleteCardLike,
 };
