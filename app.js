@@ -30,6 +30,4 @@ app.use('*', (req, res) => res
   .status(constants.HTTP_STATUS_NOT_FOUND)
   .send({ message: 'Запрашиваемая страница не найдена.' }));
 
-app.listen(PORT, () => {
-  console.log(`Server run on http://localhost:${PORT}/`);
-});
+app.listen(PORT);
