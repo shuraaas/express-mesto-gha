@@ -1,6 +1,7 @@
 {
   "name": "express-mesto-gha",
   "version": "1.0.0",
+  "author": "Alexandr Perunov",
   "type": "module",
   "description": "Проект Mesto фронтенд + бэкенд",
   "main": "app.js",
@@ -14,7 +15,6 @@
     "url": "git+https://github.com/shuraaas/express-mesto-gha.git"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/shuraaas/express-mesto-gha/issues"

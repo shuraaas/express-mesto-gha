@@ -17,7 +17,7 @@ Cache-Control: no-cache
 Content-Type: application/json
 
 ### ! Поиск пользователя по ID
-GET http://localhost:3000/users/1
+GET http://localhost:3000/users/636fa80e7081e161d24a6a4c
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
@@ -28,8 +28,16 @@ Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
 
+{
+  "name": "Тестовый пользователь"
+}
+
 ### ! Обновление аватарки пользователя
 PATCH http://localhost:3000/users/me/avatar
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
+
+{
+  "avatar": "https://sobakovod.club/uploads/posts/2021-12/thumbs/1639670110_37-sobakovod-club-p-sobaki-sobachku-malenkuyu-na-telefon-37.jpg"
+}
