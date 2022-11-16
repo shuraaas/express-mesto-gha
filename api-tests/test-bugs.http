@@ -1,8 +1,4 @@
-PATCH http://localhost:3000/users/me/avatar
+PUT http://localhost:3000/cards/text/likes  
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
-
-{
-  "avatar": "https://ya.ru/av2.bmp"
-}

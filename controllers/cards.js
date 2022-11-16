@@ -78,9 +78,9 @@ export const putCardLike = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        responseBadRequestError(res, err.message);
-      } else if (err.name === 'CastError') {
         responseNotFoundError(res, err.message);
+      } else if (err.name === 'CastError') {
+        responseBadRequestError(res, err.message);
       } else {
         responseServerError(res, err.message);
       }
