@@ -73,11 +73,14 @@ const updateUserProfile = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => {
-      res.send(user);
+      if (!user) {
+        responseNotFoundError(res, 404);
+      } else {
+        res.send(user);
+      }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -100,11 +103,14 @@ const updateUserAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => {
-      res.send(user);
+      if (!user) {
+        responseNotFoundError(res, 404);
+      } else {
+        res.send(user);
+      }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
