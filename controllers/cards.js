@@ -110,7 +110,7 @@ const deleteCardLike = (req, res) => {
       runValidators: true,
     },
   )
-    .populate('owner')
+    .populate(['owner', 'likes'])
     .then((card) => {
       if (!card) {
         responseNotFoundError(res, 404);
