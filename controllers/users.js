@@ -1,22 +1,27 @@
 import { constants } from 'http2';
 import { User } from '../models/user.js';
+import {
+  userBadRequest,
+  serverError,
+  userNotFound,
+} from '../utils/constants.js';
 
 const responseBadRequestError = (res, message) => res
   .status(constants.HTTP_STATUS_BAD_REQUEST)
   .send({
-    message: `Переданы некорректные данные пользователя. ${message}`,
+    message: `${userBadRequest} ${message}`,
   });
 
 const responseServerError = (res) => res
   .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
   .send({
-    message: 'На сервере произошла ошибка.',
+    message: serverError,
   });
 
 const responseNotFoundError = (res, message) => res
   .status(constants.HTTP_STATUS_NOT_FOUND)
   .send({
-    message: `Пользователь с указанным _id не найден. ${message}`,
+    message: `${userNotFound} ${message}`,
   });
 
 const getUsers = (req, res) => {
@@ -26,7 +31,7 @@ const getUsers = (req, res) => {
     })
     .catch((err) => {
       responseServerError(res);
-      console.log(`На сервере произошла ошибка. ${err.message}`);
+      console.log(`${serverError} ${err.message}`);
     });
 };
 
@@ -44,7 +49,7 @@ const getUserById = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };
@@ -59,7 +64,7 @@ const createUser = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };
@@ -89,7 +94,7 @@ const updateUserProfile = (req, res) => {
         responseNotFoundError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };
@@ -119,7 +124,7 @@ const updateUserAvatar = (req, res) => {
         responseNotFoundError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };

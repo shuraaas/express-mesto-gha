@@ -1,22 +1,27 @@
 import { constants } from 'http2';
 import { Card } from '../models/card.js';
+import {
+  cardBadRequest,
+  serverError,
+  cardNotFound,
+} from '../utils/constants.js';
 
 const responseBadRequestError = (res, message) => res
   .status(constants.HTTP_STATUS_BAD_REQUEST)
   .send({
-    message: `Переданы некорректные данные карточки. ${message}`,
+    message: `${cardBadRequest} ${message}`,
   });
 
 const responseServerError = (res) => res
   .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
   .send({
-    message: 'На сервере произошла ошибка.',
+    message: serverError,
   });
 
 const responseNotFoundError = (res, message) => res
   .status(constants.HTTP_STATUS_NOT_FOUND)
   .send({
-    message: `Карточка с указанным _id не найдена. ${message}`,
+    message: `${cardNotFound} ${message}`,
   });
 
 const getCards = (req, res) => {
@@ -27,7 +32,7 @@ const getCards = (req, res) => {
     })
     .catch((err) => {
       responseServerError(res);
-      console.log(`На сервере произошла ошибка. ${err.message}`);
+      console.log(`${serverError} ${err.message}`);
     });
 };
 
@@ -43,7 +48,7 @@ const createCard = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };
@@ -62,7 +67,7 @@ const deleteCard = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };
@@ -91,7 +96,7 @@ const putCardLike = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };
@@ -120,7 +125,7 @@ const deleteCardLike = (req, res) => {
         responseNotFoundError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`На сервере произошла ошибка. ${err.message}`);
+        console.log(`${serverError} ${err.message}`);
       }
     });
 };
