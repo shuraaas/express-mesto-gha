@@ -5,6 +5,8 @@ Cache-Control: no-cache
 Content-Type: application/json
 
 {
+  "email": "email",
+  "password": "password",
   "name": "Тестовый пользователь1",
   "about": "Инфо о себе",
   "avatar": "https://sobakovod.club/uploads/posts/2021-12/thumbs/1639670110_37-sobakovod-club-p-sobaki-sobachku-malenkuyu-na-telefon-37.jpg"

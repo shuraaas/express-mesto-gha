@@ -1,6 +1,7 @@
 import { constants } from 'http2';
 import { User } from '../models/user.js';
-import validator from 'validator';
+// import validator from 'validator';
+import bcrypt from 'bcryptjs';
 import {
   userBadRequest,
   serverError,
@@ -60,18 +61,23 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  User.create(req.body)
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        responseBadRequestError(res, err.message);
-      } else {
-        responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
-      }
-    });
+
+  // res.send(req.body)
+
+  bcrypt.hash(req.body.password, 10)
+    .then(hash => User.create({ ...req.body, password: hash})
+      .then((user) => {
+        res.send(user);
+      })
+      .catch((err) => {
+        if (err.name === 'ValidationError') {
+          responseBadRequestError(res, err.message);
+        } else {
+          responseServerError(res);
+          console.log(`${serverError} ${err.message}`);
+        }
+      })
+    );
 };
 
 const updateUserProfile = (req, res) => {

@@ -1,4 +1,14 @@
-GET http://localhost:3000/qwe
+POST http://localhost:3000/users
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "email": "email",
+  "password": "password"
+}
+###
+GET http://localhost:3000/users
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
