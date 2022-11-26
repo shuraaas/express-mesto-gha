@@ -2,6 +2,7 @@ import { constants } from 'http2';
 import { User } from '../models/user.js';
 // import validator from 'validator';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import {
   userBadRequest,
   serverError,
@@ -25,6 +26,23 @@ const responseNotFoundError = (res, message) => res
   .send({
     message: `${userNotFound} ${message}`,
   });
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+      .then((user) => {
+        const token = jwt.sign({ _id: user._id }, 'secret-key', { expiresIn: '7d' });
+        // TODO: тут оправлять токен в куки httpOnly
+        res.send({ token });
+      })
+      .catch((err) => {
+        // TODO: тут это красиво переделать
+        res
+          .status(401)
+          .send({ message: err.message });
+      });
+};
 
 const getUsers = (req, res) => {
 
@@ -141,6 +159,7 @@ const updateUserAvatar = (req, res) => {
 };
 
 export {
+  login,
   getUsers,
   getUserById,
   createUser,
