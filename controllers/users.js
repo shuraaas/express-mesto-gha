@@ -1,5 +1,6 @@
 import { constants } from 'http2';
 import { User } from '../models/user.js';
+import validator from 'validator';
 import {
   userBadRequest,
   serverError,
@@ -25,6 +26,10 @@ const responseNotFoundError = (res, message) => res
   });
 
 const getUsers = (req, res) => {
+
+  // TODO: вот эту хрень как-то надо использовать
+  // validator.isEmail('foo@bar.com')
+
   User.find({})
     .then((users) => {
       res.send(users);
