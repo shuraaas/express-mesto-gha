@@ -1,22 +1,25 @@
 import { Router } from 'express';
 import { constants } from 'http2';
-import { pageNotFound } from '../utils/constants.js';
+import { PAGE_NOT_FOUND } from '../utils/constants.js';
 import { router as userRouter } from './users.js';
 import { router as cardRouter } from './cards.js';
+import { auth } from '../middlewares/auth.js';
 import {
-  login,
-  createUser,
+  authUser,
+  registerUser,
 } from '../controllers/users.js';
 
 const router = Router();
 
-router.post('/signin', login);
-router.post('/signup', createUser);
+router.post('/signup', registerUser);
+router.post('/signin', authUser);
 
-router.use('/users', userRouter);
-router.use('/cards', cardRouter);
-router.use('*', (req, res) => res
+// router.use(auth);
+router.use('/users', auth, userRouter);
+router.use('/cards', auth, cardRouter);
+
+router.use('*', auth, (req, res) => res
   .status(constants.HTTP_STATUS_NOT_FOUND)
-  .send({ message: pageNotFound }));
+  .send({ message: PAGE_NOT_FOUND }));
 
 export { router };

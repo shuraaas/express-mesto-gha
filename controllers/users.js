@@ -2,46 +2,94 @@ import { constants } from 'http2';
 import { User } from '../models/user.js';
 // import validator from 'validator';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { generateToken } from '../utils/jwt.js';
 import {
-  userBadRequest,
-  serverError,
-  userNotFound,
+  USER_BAD_REQUEST,
+  SERVER_ERROR,
+  USER_NOT_FOUND,
+  MONGO_DUPLICATE_ERROR_CODE,
+  SOLT_ROUNDS,
 } from '../utils/constants.js';
 
 const responseBadRequestError = (res, message) => res
   .status(constants.HTTP_STATUS_BAD_REQUEST)
   .send({
-    message: `${userBadRequest} ${message}`,
+    message: `${USER_BAD_REQUEST} ${message}`,
   });
 
 const responseServerError = (res) => res
   .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
   .send({
-    message: serverError,
+    message: SERVER_ERROR,
   });
 
 const responseNotFoundError = (res, message) => res
   .status(constants.HTTP_STATUS_NOT_FOUND)
   .send({
-    message: `${userNotFound} ${message}`,
+    message: `${USER_NOT_FOUND} ${message}`,
   });
 
-const login = (req, res) => {
+// контроллер регистрации(createUser)
+const registerUser = async (req, res) => {
+
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
-      .then((user) => {
-        const token = jwt.sign({ _id: user._id }, 'secret-key', { expiresIn: '7d' });
-        // TODO: тут оправлять токен в куки httpOnly
-        res.send({ token });
-      })
-      .catch((err) => {
-        // TODO: тут это красиво переделать
-        res
-          .status(401)
-          .send({ message: err.message });
-      });
+  if (!email || !password) {
+    return res.status(400).send({ message: 'Не передан email или password' });
+  }
+
+  try {
+
+    const hash = await bcrypt.hash(password, SOLT_ROUNDS);
+
+    const newUser = await User.create({ ...req.body, password: hash });
+    if (newUser) {
+      return res.status(201).send(newUser);
+    }
+
+  } catch (err) {
+
+    if (err.name === 'ValidationError') {
+      return res.status(400).send({ message: 'Не валидный email или password' });
+    }
+
+    if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+      return res.status(409).send({ message: 'Такой пользователь уже существует' });
+    }
+
+    return res.status(500).send({ message: 'Не удалось зарегистрировать пользователя' });
+  }
+};
+
+// контроллер авторизации(login)
+const authUser = async (req, res) => {
+
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(401).send({ message: 'Не правильные email или password' });
+  }
+
+  try {
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).send({ message: 'Не правильные email или password' });
+    }
+
+    const currentUser = await User.findUserByCredentials({ email, password });
+    let token;
+
+    if (currentUser) {
+      token = generateToken({ _id: currentUser._id });
+    }
+
+    return res.status(200).send({ message: 'Добро пожаловать!', token });
+
+  } catch (err) {
+    return res.status(500).send({ message: 'Не удалось авторизоваться' });
+  }
 };
 
 const getUsers = (req, res) => {
@@ -55,8 +103,12 @@ const getUsers = (req, res) => {
     })
     .catch((err) => {
       responseServerError(res);
-      console.log(`${serverError} ${err.message}`);
+      console.log(`${SERVER_ERROR} ${err.message}`);
     });
+};
+
+const getCurrentUser = (req, res) => {
+  // TODO: тут возвращать инфу о текущем пользоваеле, как это сделать?
 };
 
 const getUserById = (req, res) => {
@@ -73,29 +125,9 @@ const getUserById = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
+        console.log(`${SERVER_ERROR} ${err.message}`);
       }
     });
-};
-
-const createUser = (req, res) => {
-
-  // res.send(req.body)
-
-  bcrypt.hash(req.body.password, 10)
-    .then(hash => User.create({ ...req.body, password: hash})
-      .then((user) => {
-        res.send(user);
-      })
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          responseBadRequestError(res, err.message);
-        } else {
-          responseServerError(res);
-          console.log(`${serverError} ${err.message}`);
-        }
-      })
-    );
 };
 
 const updateUserProfile = (req, res) => {
@@ -123,7 +155,7 @@ const updateUserProfile = (req, res) => {
         responseNotFoundError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
+        console.log(`${SERVER_ERROR} ${err.message}`);
       }
     });
 };
@@ -153,16 +185,17 @@ const updateUserAvatar = (req, res) => {
         responseNotFoundError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
+        console.log(`${SERVER_ERROR} ${err.message}`);
       }
     });
 };
 
 export {
-  login,
+  authUser,
   getUsers,
   getUserById,
-  createUser,
+  registerUser,
+  getCurrentUser,
   updateUserProfile,
   updateUserAvatar,
 };

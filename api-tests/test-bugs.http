@@ -1,14 +1,17 @@
-POST http://localhost:3000/users
+POST http://localhost:3000/signin
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
 
 {
-  "email": "email",
-  "password": "password"
+  "email": "test",
+  "password": "11111111"
 }
+
 ###
+
 GET http://localhost:3000/users
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
+Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2JmZjU5OGFiMzViNGQ2YjI3OTI2MWEiLCJpYXQiOjE2NzM3OTU5MzYsImV4cCI6MTY3NDQwMDczNn0.yyDDzSEq5xipTNwAEwjpbY9VETY6bX2DMkHqq3b2BhY"

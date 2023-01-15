@@ -1,27 +1,27 @@
 import { constants } from 'http2';
 import { Card } from '../models/card.js';
 import {
-  cardBadRequest,
-  serverError,
-  cardNotFound,
+  CARD_BAD_REQUEST,
+  SERVER_ERROR,
+  CARD_NOT_FOUND,
 } from '../utils/constants.js';
 
 const responseBadRequestError = (res, message) => res
   .status(constants.HTTP_STATUS_BAD_REQUEST)
   .send({
-    message: `${cardBadRequest} ${message}`,
+    message: `${CARD_BAD_REQUEST} ${message}`,
   });
 
 const responseServerError = (res) => res
   .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
   .send({
-    message: serverError,
+    message: SERVER_ERROR,
   });
 
 const responseNotFoundError = (res, message) => res
   .status(constants.HTTP_STATUS_NOT_FOUND)
   .send({
-    message: `${cardNotFound} ${message}`,
+    message: `${CARD_NOT_FOUND} ${message}`,
   });
 
 const getCards = (req, res) => {
@@ -32,14 +32,14 @@ const getCards = (req, res) => {
     })
     .catch((err) => {
       responseServerError(res);
-      console.log(`${serverError} ${err.message}`);
+      console.log(`${SERVER_ERROR} ${err.message}`);
     });
 };
 
 const createCard = (req, res) => {
-  const { name, link } = req.body;
+  // const { name, link } = req.body;
 
-  Card.create({ name, link, owner: req.user._id })
+  Card.create({ ...req.body, owner: req.user._id })
     .then((card) => {
       res.send(card);
     })
@@ -48,7 +48,7 @@ const createCard = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
+        console.log(`${SERVER_ERROR} ${err.message}`);
       }
     });
 };
@@ -67,7 +67,7 @@ const deleteCard = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
+        console.log(`${SERVER_ERROR} ${err.message}`);
       }
     });
 };
@@ -96,7 +96,7 @@ const putCardLike = (req, res) => {
         responseBadRequestError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
+        console.log(`${SERVER_ERROR} ${err.message}`);
       }
     });
 };
@@ -125,7 +125,7 @@ const deleteCardLike = (req, res) => {
         responseNotFoundError(res, err.message);
       } else {
         responseServerError(res);
-        console.log(`${serverError} ${err.message}`);
+        console.log(`${SERVER_ERROR} ${err.message}`);
       }
     });
 };

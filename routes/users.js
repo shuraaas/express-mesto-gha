@@ -3,6 +3,7 @@ import {
   getUsers,
   getUserById,
   // createUser,
+  getCurrentUser,
   updateUserProfile,
   updateUserAvatar,
 } from '../controllers/users.js';
@@ -10,6 +11,7 @@ import {
 const router = Router();
 
 router.get('/', getUsers);
+router.get('/me', getCurrentUser)
 router.get('/:userId', getUserById);
 // router.post('/', createUser);
 router.patch('/me', updateUserProfile);
