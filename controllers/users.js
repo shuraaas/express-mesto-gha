@@ -10,6 +10,7 @@ import {
   MONGO_DUPLICATE_ERROR_CODE,
   SOLT_ROUNDS,
 } from '../utils/constants.js';
+import { log } from 'console';
 
 const responseBadRequestError = (res, message) => res
   .status(constants.HTTP_STATUS_BAD_REQUEST)
@@ -109,6 +110,7 @@ const getUsers = (req, res) => {
 
 const getCurrentUser = (req, res) => {
   // TODO: тут возвращать инфу о текущем пользоваеле, как это сделать?
+  
 };
 
 const getUserById = (req, res) => {

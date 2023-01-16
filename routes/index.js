@@ -14,7 +14,6 @@ const router = Router();
 router.post('/signup', registerUser);
 router.post('/signin', authUser);
 
-// router.use(auth);
 router.use('/users', auth, userRouter);
 router.use('/cards', auth, cardRouter);
 
