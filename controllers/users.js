@@ -108,9 +108,10 @@ const getUsers = (req, res) => {
     });
 };
 
-const getCurrentUser = (req, res) => {
-  // TODO: тут возвращать инфу о текущем пользоваеле, как это сделать?
-  
+// ? вроде работает, но так ли должно работать?
+const getCurrentUser = async (req, res) => {
+  const currentUser = await User.findById(req.user._id);
+  return res.send(currentUser);
 };
 
 const getUserById = (req, res) => {
