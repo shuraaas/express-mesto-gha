@@ -53,23 +53,44 @@ const createCard = (req, res) => {
     });
 };
 
-const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        responseNotFoundError(res, 404);
-      } else {
-        res.send(card);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        responseBadRequestError(res, err.message);
-      } else {
-        responseServerError(res);
-        console.log(`${SERVER_ERROR} ${err.message}`);
-      }
-    });
+const deleteCard = async (req, res) => {
+
+  // todo тут красиво ошибки надо переделать
+  
+  try {
+    const currentCard = await Card.findById(req.params.cardId);
+
+    if (currentCard.owner != req.user._id) {
+      return res.send({ message: 'Нет доступа' });
+    }
+
+    await Card.findByIdAndRemove(currentCard._id);
+
+    return res.send({ message: 'Карточка удалена' });
+
+  } catch (err) {
+    return res.status(500).send({ message: 'Что-то не так на сервере' });
+  }
+
+  // return res.send(currentCard._id);
+
+
+  // Card.findByIdAndRemove(req.params.cardId)
+  //   .then((card) => {
+  //     if (!card) {
+  //       responseNotFoundError(res, 404);
+  //     } else {
+  //       res.send(card);
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     if (err.name === 'CastError') {
+  //       responseBadRequestError(res, err.message);
+  //     } else {
+  //       responseServerError(res);
+  //       console.log(`${SERVER_ERROR} ${err.message}`);
+  //     }
+  //   });
 };
 
 const putCardLike = (req, res) => {

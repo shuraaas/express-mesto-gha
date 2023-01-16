@@ -13,10 +13,8 @@ const router = Router();
 
 router.post('/signup', registerUser);
 router.post('/signin', authUser);
-
 router.use('/users', auth, userRouter);
 router.use('/cards', auth, cardRouter);
-
 router.use('*', auth, (req, res) => res
   .status(constants.HTTP_STATUS_NOT_FOUND)
   .send({ message: PAGE_NOT_FOUND }));
