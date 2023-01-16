@@ -8,6 +8,8 @@ const SERVER_ERROR = 'На сервере произошла ошибка.';
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
 const SOLT_ROUNDS = 10;
 
+const JWT_SECRET_KEY = 'secret_key';
+
 export {
   PAGE_NOT_FOUND,
   USER_BAD_REQUEST,
@@ -17,4 +19,5 @@ export {
   SERVER_ERROR,
   MONGO_DUPLICATE_ERROR_CODE,
   SOLT_ROUNDS,
+  JWT_SECRET_KEY,
 };

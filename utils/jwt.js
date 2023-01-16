@@ -1,9 +1,8 @@
 import jwt from 'jsonwebtoken';
-
-const JWT_SECRET_KEY = 'secret_key';
+import { JWT_SECRET_KEY } from '../utils/constants.js';
 
 const generateToken = (payload) => {
-  return jwt.sign(payload, 'secret_key', { expiresIn: '7d' });
+  return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '7d' });
 };
 
 export { generateToken };

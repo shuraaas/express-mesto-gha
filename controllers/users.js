@@ -10,7 +10,6 @@ import {
   MONGO_DUPLICATE_ERROR_CODE,
   SOLT_ROUNDS,
 } from '../utils/constants.js';
-import { log } from 'console';
 
 const responseBadRequestError = (res, message) => res
   .status(constants.HTTP_STATUS_BAD_REQUEST)
