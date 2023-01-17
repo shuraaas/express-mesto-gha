@@ -1,6 +1,6 @@
 import { constants } from 'http2';
 import { User } from '../models/user.js';
-// import validator from 'validator';
+import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../utils/jwt.js';
 import {
@@ -33,6 +33,11 @@ const responseNotFoundError = (res, message) => res
 const registerUser = async (req, res) => {
 
   const { email, password } = req.body;
+
+  const isEmail = validator.isEmail(email);
+  if (!isEmail) {
+    return res.status(400).send({ message: 'Не валидный email' });
+  }
 
   if (!email || !password) {
     return res.status(400).send({ message: 'Не передан email или password' });
@@ -93,9 +98,6 @@ const authUser = async (req, res) => {
 };
 
 const getUsers = (req, res) => {
-
-  // TODO: вот эту хрень как-то надо использовать
-  // validator.isEmail('foo@bar.com')
 
   User.find({})
     .then((users) => {
