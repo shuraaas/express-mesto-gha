@@ -10,6 +10,11 @@ import {
   MONGO_DUPLICATE_ERROR_CODE,
   SOLT_ROUNDS,
 } from '../utils/constants.js';
+import {
+  NotFoundError,
+  BadRequestErr,
+  MongoDuplicateErr,
+} from '../errors/index.js';
 
 const responseBadRequestError = (res, message) => res
   .status(constants.HTTP_STATUS_BAD_REQUEST)
@@ -30,17 +35,19 @@ const responseNotFoundError = (res, message) => res
   });
 
 // контроллер регистрации(createUser)
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
 
   const { email, password } = req.body;
 
-  const isEmail = validator.isEmail(email);
-  if (!isEmail) {
-    return res.status(400).send({ message: 'Не валидный email' });
+  if (!email || !password) {
+    // return res.status(400).send({ message: 'Не передан email или password' });
+    next(new BadRequestErr('Не передан email или password'));
   }
 
-  if (!email || !password) {
-    return res.status(400).send({ message: 'Не передан email или password' });
+  // const isEmail = validator.isEmail(email);
+  if (!validator.isEmail(email)) {
+    // return res.status(400).send({ message: 'Не валидный email' });
+    next(new BadRequestErr('Не валидный email'));
   }
 
   try {
@@ -55,14 +62,17 @@ const registerUser = async (req, res) => {
   } catch (err) {
 
     if (err.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Не валидный email или password' });
+      next(new BadRequestErr('Не валидный email или password'));
+      // return res.status(400).send({ message: 'Не валидный email или password' });
     }
 
     if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-      return res.status(409).send({ message: 'Такой пользователь уже существует' });
+      next(new MongoDuplicateErr('Такой пользователь уже существует'));
+      // return res.status(409).send({ message: 'Такой пользователь уже существует' });
     }
 
-    return res.status(500).send({ message: 'Не удалось зарегистрировать пользователя' });
+    next(err);
+    // return res.status(500).send({ message: 'Не удалось зарегистрировать пользователя' });
   }
 };
 
@@ -115,23 +125,50 @@ const getCurrentUser = async (req, res) => {
   return res.send(currentUser);
 };
 
-const getUserById = (req, res) => {
-  User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        responseNotFoundError(res, 404);
-      } else {
-        res.send(user);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        responseBadRequestError(res, err.message);
-      } else {
-        responseServerError(res);
-        console.log(`${SERVER_ERROR} ${err.message}`);
-      }
-    });
+const getUserById = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (user) {
+      res.send(user);
+    } else {
+      throw new NotFoundError('Пользователь с указанным ID не найден');
+    }
+  } catch (err) {
+
+    if (err.name === 'CastError') {
+      next(new BadRequestErr('Не валидный ID'));
+    }
+
+    next(err);
+  }
+
+  // User.findById(req.params.userId)
+  //   .then((user) => {
+
+      // if (!user) {
+      //   responseNotFoundError(res, 404);
+      // } else {
+      //   res.send(user);
+      // }
+
+      // if (user) {
+      //   res.send(user)
+      // } else {
+      //   throw new NotFoundError('Пользователь с указанным ID не найден');
+      // }
+
+    // })
+    // .catch((err) => {
+    //   if (err.name === 'CastError') {
+    //     responseBadRequestError(res, err.message);
+    //   } else {
+    //     responseServerError(res);
+    //     console.log(`${SERVER_ERROR} ${err.message}`);
+    //   }
+    // });
 };
 
 const updateUserProfile = (req, res) => {
