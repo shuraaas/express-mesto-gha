@@ -16,9 +16,9 @@ const auth = (req, res, next) => {
   } catch (err) {
     if (err.name === 'JsonWebTokenError') {
       next(new UnAuthtorizedErr('Необходима авторизация'));
+    } else {
+      next(err);
     }
-
-    next(err);
   }
 
   req.user = payload;

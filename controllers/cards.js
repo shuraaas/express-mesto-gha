@@ -21,8 +21,9 @@ const createCard = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestErr('Что-то не так с данными'));
+    } else {
+      next(err);
     }
-    next(err);
   }
 };
 
@@ -60,9 +61,9 @@ const putCardLike = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadRequestErr('Что-то не так с данными'));
+    } else {
+      next(err);
     }
-
-    next(err);
   }
 };
 
@@ -85,9 +86,9 @@ const deleteCardLike = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadRequestErr('Что-то не так с данными'));
+    } else {
+      next(err);
     }
-
-    next(err);
   }
 };
 

@@ -29,11 +29,11 @@ const registerUser = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestErr('Не валидный email или password'));
-    }
-    if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+    } else if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
       next(new MongoDuplicateErr('Такой пользователь уже существует'));
+    } else {
+      next(err);
     }
-    next(err);
   }
 };
 
@@ -82,8 +82,9 @@ const getUserById = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadRequestErr('Не валидный ID'));
+    } else {
+      next(err);
     }
-    next(err);
   }
 };
 
@@ -108,9 +109,9 @@ const updateUserProfile = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestErr('Что-то не так с данными'));
+    } else {
+      next(err);
     }
-
-    next(err);
   }
 };
 
@@ -135,9 +136,9 @@ const updateUserAvatar = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestErr('Что-то не так с данными'));
+    } else {
+      next(err);
     }
-
-    next(err);
   }
 };
 

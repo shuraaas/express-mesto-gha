@@ -63,8 +63,22 @@ const validateCardBody = celebrate({
   },
 });
 
+const validateAvatarBody = celebrate({
+  body: {
+    avatar: Joi.string().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Не валидная ссылка');
+    }).messages({
+      'any.required': 'Поле link обязательно',
+    }),
+  },
+});
+
 export {
   validateRegisterBody,
   validateAuthBody,
   validateCardBody,
+  validateAvatarBody,
 };
