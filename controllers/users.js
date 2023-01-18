@@ -2,9 +2,6 @@ import bcrypt from 'bcryptjs';
 import { User } from '../models/user.js';
 import { generateToken } from '../utils/jwt.js';
 import {
-  USER_BAD_REQUEST,
-  SERVER_ERROR,
-  USER_NOT_FOUND,
   MONGO_DUPLICATE_ERROR_CODE,
   SOLT_ROUNDS,
 } from '../utils/constants.js';
@@ -27,7 +24,7 @@ const registerUser = async (req, res, next) => {
     const hash = await bcrypt.hash(password, SOLT_ROUNDS);
     const newUser = await User.create({ ...req.body, password: hash });
     if (newUser) {
-      return res.send(newUser);
+      res.send(newUser);
     }
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -52,7 +49,7 @@ const authUser = async (req, res, next) => {
     if (user) {
       token = generateToken({ _id: user._id });
     }
-    return res.status(200).send({ message: 'Добро пожаловать!', token });
+    res.status(200).send({ message: 'Добро пожаловать!', token });
   } catch (err) {
     next(err);
   }
@@ -61,7 +58,7 @@ const authUser = async (req, res, next) => {
 const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
-    return res.send(users);
+    res.send(users);
   } catch (err) {
     next(err);
   }

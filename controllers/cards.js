@@ -1,10 +1,5 @@
 import { Card } from '../models/card.js';
 import {
-  CARD_BAD_REQUEST,
-  SERVER_ERROR,
-  CARD_NOT_FOUND,
-} from '../utils/constants.js';
-import {
   BadRequestErr,
   ForbiddenErr,
   NotFoundError,
@@ -13,7 +8,7 @@ import {
 const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
-    return res.send(cards);
+    res.send(cards);
   } catch (err) {
     next(err);
   }
@@ -22,7 +17,7 @@ const getCards = async (req, res, next) => {
 const createCard = async (req, res, next) => {
   try {
     const newCard = await Card.create({ ...req.body, owner: req.user._id });
-    return res.send(newCard);
+    res.send(newCard);
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestErr('Что-то не так с данными'));
@@ -35,12 +30,12 @@ const deleteCard = async (req, res, next) => {
   try {
     const currentCard = await Card.findById(req.params.cardId);
 
-    if (currentCard.owner != req.user._id) {
+    if (currentCard.owner !== req.user._id) {
       throw new ForbiddenErr('Нет доступа');
     }
 
     await Card.findByIdAndRemove(currentCard._id);
-    return res.send({ message: 'Карточка удалена' });
+    res.send({ message: 'Карточка удалена' });
   } catch (err) {
     next(err);
   }
@@ -72,7 +67,6 @@ const putCardLike = async (req, res, next) => {
 };
 
 const deleteCardLike = async (req, res, next) => {
-
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
