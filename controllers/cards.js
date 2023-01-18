@@ -1,154 +1,100 @@
-import { constants } from 'http2';
 import { Card } from '../models/card.js';
 import {
   CARD_BAD_REQUEST,
   SERVER_ERROR,
   CARD_NOT_FOUND,
 } from '../utils/constants.js';
+import {
+  BadRequestErr,
+  ForbiddenErr,
+  NotFoundError,
+} from '../errors/index.js';
 
-const responseBadRequestError = (res, message) => res
-  .status(constants.HTTP_STATUS_BAD_REQUEST)
-  .send({
-    message: `${CARD_BAD_REQUEST} ${message}`,
-  });
-
-const responseServerError = (res) => res
-  .status(constants.HTTP_STATUS_SERVICE_UNAVAILABLE)
-  .send({
-    message: SERVER_ERROR,
-  });
-
-const responseNotFoundError = (res, message) => res
-  .status(constants.HTTP_STATUS_NOT_FOUND)
-  .send({
-    message: `${CARD_NOT_FOUND} ${message}`,
-  });
-
-const getCards = (req, res) => {
-  Card.find({})
-    .populate(['owner', 'likes'])
-    .then((cards) => {
-      res.send(cards);
-    })
-    .catch((err) => {
-      responseServerError(res);
-      console.log(`${SERVER_ERROR} ${err.message}`);
-    });
+const getCards = async (req, res, next) => {
+  try {
+    const cards = await Card.find({}).populate(['owner', 'likes']);
+    return res.send(cards);
+  } catch (err) {
+    next(err);
+  }
 };
 
-const createCard = (req, res) => {
-  // const { name, link } = req.body;
-
-  Card.create({ ...req.body, owner: req.user._id })
-    .then((card) => {
-      res.send(card);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        responseBadRequestError(res, err.message);
-      } else {
-        responseServerError(res);
-        console.log(`${SERVER_ERROR} ${err.message}`);
-      }
-    });
+const createCard = async (req, res, next) => {
+  try {
+    const newCard = await Card.create({ ...req.body, owner: req.user._id });
+    return res.send(newCard);
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      next(new BadRequestErr('Что-то не так с данными'));
+    }
+    next(err);
+  }
 };
 
-const deleteCard = async (req, res) => {
-
-  // todo тут красиво ошибки надо переделать
-  
+const deleteCard = async (req, res, next) => {
   try {
     const currentCard = await Card.findById(req.params.cardId);
 
     if (currentCard.owner != req.user._id) {
-      return res.send({ message: 'Нет доступа' });
+      throw new ForbiddenErr('Нет доступа');
     }
 
     await Card.findByIdAndRemove(currentCard._id);
-
     return res.send({ message: 'Карточка удалена' });
-
   } catch (err) {
-    return res.status(500).send({ message: 'Что-то не так на сервере' });
+    next(err);
   }
-
-  // return res.send(currentCard._id);
-
-
-  // Card.findByIdAndRemove(req.params.cardId)
-  //   .then((card) => {
-  //     if (!card) {
-  //       responseNotFoundError(res, 404);
-  //     } else {
-  //       res.send(card);
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     if (err.name === 'CastError') {
-  //       responseBadRequestError(res, err.message);
-  //     } else {
-  //       responseServerError(res);
-  //       console.log(`${SERVER_ERROR} ${err.message}`);
-  //     }
-  //   });
 };
 
-const putCardLike = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .populate(['owner', 'likes'])
-    .then((card) => {
-      if (!card) {
-        responseNotFoundError(res, 404);
-      } else {
-        res.send(card);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        responseNotFoundError(res, err.message);
-      } else if (err.name === 'CastError') {
-        responseBadRequestError(res, err.message);
-      } else {
-        responseServerError(res);
-        console.log(`${SERVER_ERROR} ${err.message}`);
-      }
-    });
+const putCardLike = async (req, res, next) => {
+  try {
+    const updatedCard = await Card.findByIdAndUpdate(
+      req.params.cardId,
+      { $addToSet: { likes: req.user._id } },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).populate(['owner', 'likes']);
+
+    if (!updatedCard) {
+      throw new NotFoundError('Карточка не найдена');
+    } else {
+      res.send(updatedCard);
+    }
+  } catch (err) {
+    if (err.name === 'CastError') {
+      next(new BadRequestErr('Что-то не так с данными'));
+    }
+
+    next(err);
+  }
 };
 
-const deleteCardLike = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .populate(['owner', 'likes'])
-    .then((card) => {
-      if (!card) {
-        responseNotFoundError(res, 404);
-      } else {
-        res.send(card);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        responseBadRequestError(res, err.message);
-      } else if (err.name === 'ValidationError') {
-        responseNotFoundError(res, err.message);
-      } else {
-        responseServerError(res);
-        console.log(`${SERVER_ERROR} ${err.message}`);
-      }
-    });
+const deleteCardLike = async (req, res, next) => {
+
+  try {
+    const card = await Card.findByIdAndUpdate(
+      req.params.cardId,
+      { $pull: { likes: req.user._id } },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).populate(['owner', 'likes']);
+
+    if (!card) {
+      throw new NotFoundError('Карточка не найдена');
+    } else {
+      res.send(card);
+    }
+  } catch (err) {
+    if (err.name === 'CastError') {
+      next(new BadRequestErr('Что-то не так с данными'));
+    }
+
+    next(err);
+  }
 };
 
 export {

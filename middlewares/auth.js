@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
-import { SERVER_ERROR, JWT_SECRET_KEY } from '../utils/constants.js';
+import { JWT_SECRET_KEY } from '../utils/constants.js';
+import { UnAuthtorizedErr } from '../errors/index.js';
 
 const auth = (req, res, next) => {
-
   const token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).send({ message: 'Необходима авторизация' });
+    throw new UnAuthtorizedErr('Необходима авторизация');
   }
 
   let payload;
@@ -15,9 +15,10 @@ const auth = (req, res, next) => {
     payload = jwt.verify(token, JWT_SECRET_KEY);
   } catch (err) {
     if (err.name === 'JsonWebTokenError') {
-      return res.status(401).send({ message: 'С токеном что-то не так' });
+      next(new UnAuthtorizedErr('Необходима авторизация'));
     }
-    return res.status(500).send({ message: SERVER_ERROR });
+
+    next(err);
   }
 
   req.user = payload;

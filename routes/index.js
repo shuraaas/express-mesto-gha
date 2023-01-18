@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { constants } from 'http2';
 import { PAGE_NOT_FOUND } from '../utils/constants.js';
 import { router as userRouter } from './users.js';
 import { router as cardRouter } from './cards.js';
 import { auth } from '../middlewares/auth.js';
+import { NotFoundError } from '../errors/index.js';
+import { validateRegisterBody, validateAuthBody } from '../middlewares/validation.js';
 import {
   authUser,
   registerUser,
@@ -11,12 +12,10 @@ import {
 
 const router = Router();
 
-router.post('/signup', registerUser);
-router.post('/signin', authUser);
+router.post('/signup', validateRegisterBody, registerUser);
+router.post('/signin', validateAuthBody, authUser);
 router.use('/users', auth, userRouter);
 router.use('/cards', auth, cardRouter);
-router.use('*', auth, (req, res) => res
-  .status(constants.HTTP_STATUS_NOT_FOUND)
-  .send({ message: PAGE_NOT_FOUND }));
+router.use('*', auth, (req, res, next) => next(new NotFoundError(PAGE_NOT_FOUND)));
 
 export { router };
