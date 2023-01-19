@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import validator from 'validator';
 import { UnAuthtorizedErr } from '../errors/index.js';
 
 const { Schema } = mongoose;
@@ -9,11 +10,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    validate: {
+      validator: (v) => validator.isEmail(v),
+      message: 'Не валидный Email',
+    },
   },
   password: {
     type: String,
     required: true,
-    minlength: 8,
     select: false,
   },
   name: {
@@ -30,6 +34,10 @@ const userSchema = new Schema({
   },
   avatar: {
     type: String,
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: 'Не валидная ссылка',
+    },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
 }, {

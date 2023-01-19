@@ -6,8 +6,7 @@ const validateRegisterBody = celebrate({
     email: Joi.string().required().email().messages({
       'any.required': 'Поле email обязательно',
     }),
-    password: Joi.string().min(8).required().messages({
-      'string.min': 'Минимальная длина поля 8 символов',
+    password: Joi.string().required().messages({
       'any.required': 'Поле password обязательно',
     }),
     name: Joi.string().min(2).max(30).messages({
@@ -34,8 +33,7 @@ const validateAuthBody = celebrate({
     email: Joi.string().required().email().messages({
       'any.required': 'Поле email обязательно',
     }),
-    password: Joi.string().min(8).required().messages({
-      'string.min': 'Минимальная длина поля 8 символов',
+    password: Joi.string().required().messages({
       'any.required': 'Поле password обязательно',
     }),
   },
