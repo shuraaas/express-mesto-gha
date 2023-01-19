@@ -29,7 +29,13 @@ const registerUser = async (req, res, next) => {
       // console.log(req.user);
 
       // res.send({ _id: newUser._id, email: newUser.email });
-      res.send(newUser);
+      res.send({
+        _id: newUser._id,
+        email: newUser.email,
+        name: newUser.name,
+        about: newUser.about,
+        avatar: newUser.avatar,
+      });
     }
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -69,23 +75,13 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-// ? вроде работает, но так ли должно работать?
 const getCurrentUser = async (req, res, next) => {
-
-  // res.send(req.user)
-
   try {
     const currentUser = await User.findById(req.user._id);
-
-    console.log(currentUser);
-
     res.send(currentUser);
   } catch (err) {
     next(err);
   }
-
-  // const currentUser = await User.findById(req.user._id);
-  // return res.send(currentUser);
 };
 
 const getUserById = async (req, res, next) => {
