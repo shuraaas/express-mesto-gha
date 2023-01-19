@@ -53,7 +53,7 @@ const authUser = async (req, res, next) => {
     if (user) {
       token = generateToken({ _id: user._id });
     }
-    res.status(200).send({ message: 'Добро пожаловать!', token });
+    res.send({ token });
   } catch (err) {
     next(err);
   }

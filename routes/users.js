@@ -7,12 +7,8 @@ import {
   updateUserAvatar,
 } from '../controllers/users.js';
 import { validateAvatarBody } from '../middlewares/validation.js';
-// import { auth } from '../middlewares/auth.js';
 
 const router = Router();
-
-
-// router.use(auth);
 
 router.get('/', getUsers);
 router.get('/me', getCurrentUser);
