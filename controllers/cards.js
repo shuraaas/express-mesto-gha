@@ -38,7 +38,7 @@ const deleteCard = async (req, res, next) => {
       throw new ForbiddenErr('Нет доступа');
     }
 
-    await Card.remove(card._id);
+    await Card.deleteOne(card._id);
     res.send(card);
   } catch (err) {
     next(err);
