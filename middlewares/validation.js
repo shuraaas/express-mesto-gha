@@ -83,9 +83,21 @@ const validateAvatarBody = celebrate({
   },
 });
 
+const validateUserId = celebrate({
+  params: {
+    userId: Joi.string().custom((value, helpers) => {
+      if (validator.isMongoId(value)) {
+        return value;
+      }
+      return helpers.message('ID должен быть строкой из 24 шестнадцатеричных символов или целым числом');
+    }),
+  },
+});
+
 export {
   validateRegisterBody,
   validateAuthBody,
   validateCardBody,
   validateAvatarBody,
+  validateUserId,
 };
