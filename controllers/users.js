@@ -8,6 +8,7 @@ import {
 import {
   BadRequestErr,
   MongoDuplicateErr,
+  NotFoundError,
 } from '../errors/index.js';
 
 const registerUser = async (req, res, next) => {
@@ -68,7 +69,11 @@ const getUserById = async (req, res, next) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
-    res.send(user);
+    if (user) {
+      res.send(user);
+    } else {
+      throw new NotFoundError('Пользователь с указанным ID не найден');
+    }
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadRequestErr('Не валидный ID'));
