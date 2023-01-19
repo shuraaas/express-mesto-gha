@@ -8,7 +8,7 @@ import {
 } from '../controllers/cards.js';
 import {
   validateCardBody,
-  validateCardId
+  validateCardId,
 } from '../middlewares/validation.js';
 
 const router = Router();

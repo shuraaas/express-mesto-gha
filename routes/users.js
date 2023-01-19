@@ -9,7 +9,7 @@ import {
 import {
   validateAvatarBody,
   validateUserId,
-  validateUpdateUser
+  validateUpdateUser,
 } from '../middlewares/validation.js';
 
 const router = Router();

@@ -30,18 +30,15 @@ const createCard = async (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.cardId);
-
     if (!card) {
       next(new NotFoundError('Карточка с таким ID не найдена'));
     }
-    // console.log(card.owner.toString());
 
     if (card.owner.toString() !== req.user._id) {
       throw new ForbiddenErr('Нет доступа');
     }
 
     await Card.findByIdAndRemove(card._id);
-    // res.send({ message: 'Карточка удалена' });
     res.send(card);
   } catch (err) {
     next(err);

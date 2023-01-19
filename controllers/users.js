@@ -12,10 +12,8 @@ import {
   UnAuthtorizedErr,
 } from '../errors/index.js';
 
-// контроллер регистрации(createUser)
 const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     next(new BadRequestErr('Не передан email или password'));
   }
@@ -24,11 +22,6 @@ const registerUser = async (req, res, next) => {
     const hash = await bcrypt.hash(password, SOLT_ROUNDS);
     const newUser = await User.create({ ...req.body, password: hash });
     if (newUser) {
-      // req.user.id = newUser._id.toString();
-
-      // console.log(req.user);
-
-      // res.send({ _id: newUser._id, email: newUser.email });
       res.send({
         _id: newUser._id,
         email: newUser.email,
@@ -48,7 +41,6 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-// контроллер авторизации(login)
 const authUser = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {

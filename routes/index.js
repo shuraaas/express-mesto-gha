@@ -20,7 +20,6 @@ router.post('/signin', validateAuthBody, authUser);
 
 router.use('/users', auth, userRouter);
 router.use('/cards', auth, cardRouter);
-// router.use('*', auth, (req, res, next) => next(new NotFoundError(PAGE_NOT_FOUND)));
 router.use('*', (req, res, next) => next(new NotFoundError(PAGE_NOT_FOUND)));
 
 export { router };
