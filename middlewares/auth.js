@@ -3,14 +3,36 @@ import { JWT_SECRET_KEY } from '../utils/constants.js';
 import { UnAuthtorizedErr } from '../errors/index.js';
 
 const auth = (req, res, next) => {
-  const token = req.headers.authorization || req.headers.Authorization;
+  // const token = req.headers.authorization || req.headers.Authorization;
 
-  if (!token) {
+  // if (!token) {
+  //   next(new UnAuthtorizedErr('Необходима авторизация'));
+  // }
+
+  // let payload;
+
+  // try {
+  //   payload = jwt.verify(token, JWT_SECRET_KEY);
+  // } catch (err) {
+    // if (err.name === 'JsonWebTokenError') {
+    //   next(new UnAuthtorizedErr('Необходима авторизация'));
+    // } else {
+    //   next(err);
+    // }
+  // }
+
+  // req.user = payload;
+  // next();
+
+
+
+  const authorization = req.headers;
+  if (!authorization || authorization.startsWith('Bearer ')) {
     next(new UnAuthtorizedErr('Необходима авторизация'));
   }
 
+  const token = authorization.replace('Bearer ', '');
   let payload;
-
   try {
     payload = jwt.verify(token, JWT_SECRET_KEY);
   } catch (err) {
@@ -23,6 +45,7 @@ const auth = (req, res, next) => {
 
   req.user = payload;
   next();
+  return payload;
 };
 
 export { auth };
