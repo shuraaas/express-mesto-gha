@@ -26,15 +26,22 @@ const auth = (req, res, next) => {
 
 
 
-  const authorization = req.headers;
-  if (!authorization || authorization.startsWith('Bearer ')) {
+  const authorization = req.headers.authorization;
+
+  // console.log(authorization);
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     next(new UnAuthtorizedErr('Необходима авторизация'));
   }
 
   const token = authorization.replace('Bearer ', '');
+
+  // console.log(token);
+
   let payload;
   try {
     payload = jwt.verify(token, JWT_SECRET_KEY);
+    // console.log(payload);
   } catch (err) {
     if (err.name === 'JsonWebTokenError') {
       next(new UnAuthtorizedErr('Необходима авторизация'));
@@ -45,7 +52,6 @@ const auth = (req, res, next) => {
 
   req.user = payload;
   next();
-  return payload;
 };
 
 export { auth };
