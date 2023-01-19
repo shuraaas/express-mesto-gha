@@ -24,6 +24,10 @@ const registerUser = async (req, res, next) => {
     const hash = await bcrypt.hash(password, SOLT_ROUNDS);
     const newUser = await User.create({ ...req.body, password: hash });
     if (newUser) {
+      // req.user.id = newUser._id.toString();
+
+      // console.log(req.user);
+
       res.send({ email: newUser.email, _id: newUser._id });
     }
   } catch (err) {
@@ -65,7 +69,17 @@ const getUsers = async (req, res, next) => {
 };
 
 // ? вроде работает, но так ли должно работать?
-const getCurrentUser = async (req, res) => {
+const getCurrentUser = async (req, res, next) => {
+
+  // res.send(req.user)
+
+  // try {
+  //   const currentUser = await User.findById(req.user._id);
+  //   res.send(currentUser);
+  // } catch (err) {
+  //   next(err);
+  // }
+
   const currentUser = await User.findById(req.user._id);
   return res.send(currentUser);
 };
