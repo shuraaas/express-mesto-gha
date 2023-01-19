@@ -4,7 +4,11 @@ import { router as userRouter } from './users.js';
 import { router as cardRouter } from './cards.js';
 import { auth } from '../middlewares/auth.js';
 import { NotFoundError } from '../errors/index.js';
-import { validateRegisterBody, validateAuthBody } from '../middlewares/validation.js';
+import {
+  validateRegisterBody,
+  validateAuthBody,
+  validateAvatarBody
+} from '../middlewares/validation.js';
 import {
   authUser,
   registerUser,

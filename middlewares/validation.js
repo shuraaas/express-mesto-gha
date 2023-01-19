@@ -23,7 +23,14 @@ const validateRegisterBody = celebrate({
       'string.min': 'Минимальная длина поля 2 символа',
       'string.max': 'Максимальная длина поля 30 символов',
     }),
-    avatar: Joi.string(),
+    avatar: Joi.string().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Не валидная ссылка');
+    }).messages({
+      'any.required': 'Поле link обязательно',
+    }),
   },
 });
 

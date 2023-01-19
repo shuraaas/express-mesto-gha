@@ -24,7 +24,7 @@ const registerUser = async (req, res, next) => {
     const hash = await bcrypt.hash(password, SOLT_ROUNDS);
     const newUser = await User.create({ ...req.body, password: hash });
     if (newUser) {
-      res.send(newUser);
+      res.send({ email: newUser.email, _id: newUser._id });
     }
   } catch (err) {
     if (err.name === 'ValidationError') {
