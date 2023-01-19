@@ -38,7 +38,7 @@ const deleteCard = async (req, res, next) => {
       throw new ForbiddenErr('Нет доступа');
     }
 
-    await Card.findByIdAndRemove(card._id);
+    await Card.remove(card._id);
     res.send(card);
   } catch (err) {
     next(err);
@@ -52,7 +52,6 @@ const putCardLike = async (req, res, next) => {
       { $addToSet: { likes: req.user._id } },
       {
         new: true,
-        runValidators: true,
       },
     ).populate(['owner', 'likes']);
 
@@ -77,7 +76,6 @@ const deleteCardLike = async (req, res, next) => {
       { $pull: { likes: req.user._id } },
       {
         new: true,
-        runValidators: true,
       },
     ).populate(['owner', 'likes']);
 

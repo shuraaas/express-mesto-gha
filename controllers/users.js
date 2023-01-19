@@ -6,18 +6,12 @@ import {
   SOLT_ROUNDS,
 } from '../utils/constants.js';
 import {
-  NotFoundError,
   BadRequestErr,
   MongoDuplicateErr,
-  UnAuthtorizedErr,
 } from '../errors/index.js';
 
 const registerUser = async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    next(new BadRequestErr('Не передан email или password'));
-  }
-
+  const { password } = req.body;
   try {
     const hash = await bcrypt.hash(password, SOLT_ROUNDS);
     const newUser = await User.create({ ...req.body, password: hash });
@@ -43,15 +37,9 @@ const registerUser = async (req, res, next) => {
 
 const authUser = async (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    next(new UnAuthtorizedErr('Не правильные email или password'));
-  }
   try {
     const user = await User.findUserByCredentials({ email, password });
-    let token;
-    if (user) {
-      token = generateToken({ _id: user._id });
-    }
+    const token = generateToken({ _id: user._id });
     res.send({ token });
   } catch (err) {
     next(err);
@@ -80,11 +68,7 @@ const getUserById = async (req, res, next) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
-    if (user) {
-      res.send(user);
-    } else {
-      throw new NotFoundError('Пользователь с указанным ID не найден');
-    }
+    res.send(user);
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadRequestErr('Не валидный ID'));
@@ -106,12 +90,7 @@ const updateUserProfile = async (req, res, next) => {
         runValidators: true,
       },
     );
-
-    if (!updatedUser) {
-      throw new NotFoundError('Пользователь не найден');
-    } else {
-      res.send(updatedUser);
-    }
+    res.send(updatedUser);
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestErr('Что-то не так с данными'));
@@ -133,12 +112,7 @@ const updateUserAvatar = async (req, res, next) => {
         runValidators: true,
       },
     );
-
-    if (!updatedUser) {
-      throw new NotFoundError('Пользователь не найден');
-    } else {
-      res.send(updatedUser);
-    }
+    res.send(updatedUser);
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestErr('Что-то не так с данными'));
