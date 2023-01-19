@@ -3,10 +3,10 @@ import { JWT_SECRET_KEY } from '../utils/constants.js';
 import { UnAuthtorizedErr } from '../errors/index.js';
 
 const auth = (req, res, next) => {
-  const token = req.headers.authorization;
+  const token = req.headers.authorization || req.headers.Authorization;
 
   if (!token) {
-    throw new UnAuthtorizedErr('Необходима авторизация');
+    next(new UnAuthtorizedErr('Необходима авторизация'));
   }
 
   let payload;

@@ -28,7 +28,8 @@ const registerUser = async (req, res, next) => {
 
       // console.log(req.user);
 
-      res.send({ email: newUser.email, _id: newUser._id });
+      // res.send({ _id: newUser._id, email: newUser.email });
+      res.send(newUser);
     }
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -73,15 +74,18 @@ const getCurrentUser = async (req, res, next) => {
 
   // res.send(req.user)
 
-  // try {
-  //   const currentUser = await User.findById(req.user._id);
-  //   res.send(currentUser);
-  // } catch (err) {
-  //   next(err);
-  // }
+  try {
+    const currentUser = await User.findById(req.user._id);
 
-  const currentUser = await User.findById(req.user._id);
-  return res.send(currentUser);
+    console.log(currentUser);
+
+    res.send(currentUser);
+  } catch (err) {
+    next(err);
+  }
+
+  // const currentUser = await User.findById(req.user._id);
+  // return res.send(currentUser);
 };
 
 const getUserById = async (req, res, next) => {
