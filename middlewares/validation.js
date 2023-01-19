@@ -60,7 +60,7 @@ const validateCardBody = celebrate({
 
 const validateAvatarBody = celebrate({
   body: {
-    avatar: Joi.string().custom((value, helpers) => {
+    avatar: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
@@ -73,7 +73,7 @@ const validateAvatarBody = celebrate({
 
 const validateUserId = celebrate({
   params: {
-    userId: Joi.string().custom((value, helpers) => {
+    userId: Joi.string().required().custom((value, helpers) => {
       if (validator.isMongoId(value)) {
         return value;
       }

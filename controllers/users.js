@@ -64,7 +64,6 @@ const getCurrentUser = async (req, res, next) => {
     } else {
       throw new NotFoundError('Пользователь с указанным ID не найден');
     }
-    res.send(currentUser);
   } catch (err) {
     next(err);
   }

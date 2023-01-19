@@ -31,17 +31,17 @@ const deleteCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.cardId);
     if (!card) {
-      next(new NotFoundError('Карточка с таким ID не найдена'));
+      return next(new NotFoundError('Карточка с таким ID не найдена'));
     }
 
     if (card.owner.toString() !== req.user._id) {
-      throw new ForbiddenErr('Нет доступа');
+      return next(new ForbiddenErr('Нет доступа'));
     }
 
     await Card.deleteOne(card._id);
-    res.send(card);
+    return res.send(card);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
