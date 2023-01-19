@@ -7,7 +7,6 @@ import { NotFoundError } from '../errors/index.js';
 import {
   validateRegisterBody,
   validateAuthBody,
-  validateAvatarBody
 } from '../middlewares/validation.js';
 import {
   authUser,
