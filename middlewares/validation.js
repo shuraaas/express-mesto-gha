@@ -94,10 +94,36 @@ const validateUserId = celebrate({
   },
 });
 
+const validateCardId = celebrate({
+  params: {
+    cardId: Joi.string().custom((value, helpers) => {
+      if (validator.isMongoId(value)) {
+        return value;
+      }
+      return helpers.message('ID должен быть строкой из 24 шестнадцатеричных символов или целым числом');
+    }),
+  },
+});
+
+const validateUpdateUser = celebrate({
+  body: {
+    name: Joi.string().min(2).max(30).messages({
+      'string.min': 'Минимальная длина поля 2 символа',
+      'string.max': 'Максимальная длина поля 30 символов',
+    }),
+    about: Joi.string().min(2).max(30).messages({
+      'string.min': 'Минимальная длина поля 2 символа',
+      'string.max': 'Максимальная длина поля 30 символов',
+    }),
+  },
+});
+
 export {
   validateRegisterBody,
   validateAuthBody,
   validateCardBody,
   validateAvatarBody,
   validateUserId,
+  validateUpdateUser,
+  validateCardId,
 };
