@@ -3,12 +3,7 @@ import validator from 'validator';
 
 const validateRegisterBody = celebrate({
   body: {
-    email: Joi.string().required().custom((value, helpers) => {
-      if (validator.isEmail(value)) {
-        return value;
-      }
-      return helpers.message('Не валидный email');
-    }).messages({
+    email: Joi.string().required().email().messages({
       'any.required': 'Поле email обязательно',
     }),
     password: Joi.string().min(8).required().messages({
@@ -36,12 +31,7 @@ const validateRegisterBody = celebrate({
 
 const validateAuthBody = celebrate({
   body: {
-    email: Joi.string().required().custom((value, helpers) => {
-      if (validator.isEmail(value)) {
-        return value;
-      }
-      return helpers.message('Не валидный email');
-    }).messages({
+    email: Joi.string().required().email().messages({
       'any.required': 'Поле email обязательно',
     }),
     password: Joi.string().min(8).required().messages({
@@ -96,7 +86,7 @@ const validateUserId = celebrate({
 
 const validateCardId = celebrate({
   params: {
-    cardId: Joi.string().custom((value, helpers) => {
+    cardId: Joi.string().required().custom((value, helpers) => {
       if (validator.isMongoId(value)) {
         return value;
       }
@@ -107,14 +97,16 @@ const validateCardId = celebrate({
 
 const validateUpdateUser = celebrate({
   body: {
-    name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимальная длина поля 2 символа',
-      'string.max': 'Максимальная длина поля 30 символов',
-    }),
-    about: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимальная длина поля 2 символа',
-      'string.max': 'Максимальная длина поля 30 символов',
-    }),
+    name: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.min': 'Минимальная длина поля 2 символа',
+        'string.max': 'Максимальная длина поля 30 символов',
+      }),
+    about: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.min': 'Минимальная длина поля 2 символа',
+        'string.max': 'Максимальная длина поля 30 символов',
+      }),
   },
 });
 
